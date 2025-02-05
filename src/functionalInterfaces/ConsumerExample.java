@@ -8,10 +8,10 @@ import java.util.function.Consumer;
 
 public class ConsumerExample {
 
-    static Consumer<Student> c2 = (student) -> System.out.println(student);
-    static Consumer<Student> c3 = (student -> System.out.print(student.getName()));
-    static Consumer<Student> c4 = (student -> System.out.println(student.getActivities()));
-    static final List<Student> studentList = StudentDataBase.getAllStudents();
+    private static final Consumer<Student> c2 = (student) -> System.out.println(student);
+    private static final Consumer<Student> c3 = (student -> System.out.print(student.getName()));
+    private static final Consumer<Student> c4 = (student -> System.out.println(student.getActivities()));
+    private static final List<Student> studentList = StudentDataBase.getAllStudents();
 
     public static void printStudents() {
         System.out.println("printStudents");
