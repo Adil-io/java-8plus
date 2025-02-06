@@ -17,6 +17,14 @@ public class Student {
         this.activities = activities;
     }
 
+    public Student() {
+
+    }
+
+    public Student(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
