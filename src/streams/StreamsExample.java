@@ -22,11 +22,14 @@ public class StreamsExample {
         .collect(Collectors.toMap(Student::getName, Student::getActivities)) -> returns Map (Terminal operation)
          */
         Map<String, List<String>> studentsMap = StudentDataBase.getAllStudents().stream()
+                .peek(student -> System.out.println("Student before filter: " + student))
                 .filter(studentGradePredicate)
+                .peek(student -> System.out.println("Student after 1st filter: " + student))
                 .filter(studentGpaPredicate)
+                .peek(student -> System.out.println("Student after 2nd filter: " + student))
                 .collect(Collectors.toMap(Student::getName, Student::getActivities));
         // No intermediate operations will be invoked until the terminal operation is invoked
-
+        // Stream pipeline applies filter to elements one by one
         System.out.println(studentsMap);
     }
 
