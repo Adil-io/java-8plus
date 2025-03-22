@@ -20,19 +20,38 @@ import java.util.stream.Collectors;
 public class StreamsGroupingByExample {
 
     public static void groupStudentsByGender() {
+        System.out.println("====================");
         Map<String, List<Student>> genderStudentMap = StudentDataBase.getAllStudents().stream()
                 .collect(Collectors.groupingBy(Student::getGender));
-        System.out.println(genderStudentMap);
+        System.out.println("genderStudentMap: " + genderStudentMap);
     }
 
     public static void groupStudentsByGender_customized() {
+        System.out.println("====================");
         Map<String, List<Student>> genderStudentMap = StudentDataBase.getAllStudents().stream()
-                .collect(Collectors.groupingBy(s -> s.getGpa() >= 3.8 ? "outstanding" : "average"));
-        System.out.println(genderStudentMap);
+                .collect(Collectors.groupingBy(s -> s.getGpa() >= 3.8 ? "OUTSTANDING" : "AVERAGE"));
+        System.out.println("genderStudentMap: " + genderStudentMap);
+    }
+
+    public static void twoLevelGrouping_1() {
+        System.out.println("====================");
+        Map<Integer, Map<String, List<Student>>> gradeStudentMap = StudentDataBase.getAllStudents().stream()
+                .collect(Collectors.groupingBy(Student::getGradeLevel,
+                        Collectors.groupingBy(s -> s.getGpa() >= 3.8 ? "OUTSTANDING" : "AVERAGE")));
+        System.out.println("gradeStudentMap: " + gradeStudentMap);
+    }
+
+    public static void twoLevelGrouping_2() {
+        System.out.println("====================");
+        Map<String, Integer> nameNotebooksMap = StudentDataBase.getAllStudents().stream()
+                .collect(Collectors.groupingBy(Student::getName, Collectors.summingInt(Student::getNotebooks)));
+        System.out.println("nameNotebooksMap: " + nameNotebooksMap);
     }
 
     public static void main(String[] args) {
         groupStudentsByGender();
         groupStudentsByGender_customized();
+        twoLevelGrouping_1();
+        twoLevelGrouping_2();
     }
 }
