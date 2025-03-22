@@ -3,8 +3,10 @@ package streams_terminal;
 import data.Student;
 import data.StudentDataBase;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -14,8 +16,9 @@ import java.util.stream.Collectors;
  * - The output of the groupingBy() is going to be a Map<K,V>
  * - There are three different versions of groupingBy()
  * -> groupingBy(classifier) - classifier determines the key and grouping logic
- * -> groupingBy(classifier, downstream) - downstream can be any type of Collector
- * -> groupingBy(classifier, supplier, downstream) - supplier is used to override the default Map factory
+ * -> groupingBy(classifier, downstream) - downstream determines the value and can be any type of Collector
+ * -> groupingBy(classifier, supplier, downstream) - supplier determines the return type and is used to
+ *      override the default Map factory
  */
 public class StreamsGroupingByExample {
 
@@ -48,10 +51,20 @@ public class StreamsGroupingByExample {
         System.out.println("nameNotebooksMap: " + nameNotebooksMap);
     }
 
+    public static void threeArgumentGroupBy() {
+        System.out.println("====================");
+        LinkedHashMap<String, Set<Student>> nameStudentMap = StudentDataBase.getAllStudents().stream()
+                .collect(Collectors.groupingBy(Student::getName, // determines key
+                        LinkedHashMap::new,  // determines return type
+                        Collectors.toSet())); // determines value
+        System.out.println("nameStudentMap: " + nameStudentMap);
+    }
+
     public static void main(String[] args) {
         groupStudentsByGender();
         groupStudentsByGender_customized();
         twoLevelGrouping_1();
         twoLevelGrouping_2();
+        threeArgumentGroupBy();
     }
 }
