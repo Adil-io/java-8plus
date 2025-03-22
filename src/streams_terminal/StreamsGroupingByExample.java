@@ -3,10 +3,9 @@ package streams_terminal;
 import data.Student;
 import data.StudentDataBase;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -60,11 +59,44 @@ public class StreamsGroupingByExample {
         System.out.println("nameStudentMap: " + nameStudentMap);
     }
 
+    public static void calculateTopGpaPerGradeLevel() {
+        System.out.println("====================");
+        Map<Integer, Optional<Student>> studentMapOptional = StudentDataBase.getAllStudents().stream()
+                .collect(Collectors.groupingBy(Student::getGradeLevel,
+                        Collectors.maxBy(Comparator.comparingDouble(Student::getGpa))));
+        System.out.println("studentMapOptional: " + studentMapOptional);
+
+        System.out.println("====================");
+        Map<Integer, Student> studentMap = StudentDataBase.getAllStudents().stream()
+                .collect(Collectors.groupingBy(Student::getGradeLevel, // key
+                        // Get the optional value
+                        Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingDouble(Student::getGpa)),
+                                Optional::get))); //value
+        System.out.println("studentMap: " + studentMap);
+    }
+
+    public static void calculateLeastGpaPerGradeLevel() {
+        System.out.println("====================");
+        Map<Integer, Optional<Student>> studentMapOptional = StudentDataBase.getAllStudents().stream()
+                .collect(Collectors.groupingBy(Student::getGradeLevel,
+                        Collectors.minBy(Comparator.comparingDouble(Student::getGpa))));
+        System.out.println("studentMapOptional: " + studentMapOptional);
+
+        System.out.println("====================");
+        Map<Integer, Student> studentMap = StudentDataBase.getAllStudents().stream()
+                .collect(Collectors.toMap(Student::getGradeLevel, // key
+                        Function.identity(), // value
+                        BinaryOperator.minBy(Comparator.comparingDouble(Student::getGpa)))); // merge function
+        System.out.println("studentMap: " + studentMap);
+    }
+
     public static void main(String[] args) {
         groupStudentsByGender();
         groupStudentsByGender_customized();
         twoLevelGrouping_1();
         twoLevelGrouping_2();
         threeArgumentGroupBy();
+        calculateTopGpaPerGradeLevel();
+        calculateLeastGpaPerGradeLevel();
     }
 }
